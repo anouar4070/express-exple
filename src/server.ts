@@ -76,6 +76,33 @@ fakeProductsData.push({id: fakeProductsData.length + 1, ...newProduct})
   
 });
 
+// ** UPDATE
+app.patch("/products/:id", (req, res) => {
+  const productId = +req.params.id;
+
+  if (isNaN(productId)) {
+    return res.status(404).send({
+      message: "Product not found!",
+    });
+  }
+
+  const productIndex: number | undefined = fakeProductsData.findIndex(product => product.id === productId);
+  const productBody = req.body;
+
+  if (productIndex !== -1) {
+    fakeProductsData[productIndex] = { ...fakeProductsData[productIndex], ...productBody };
+    return res.status(200).send({
+      message: "Product has been updated!",
+    });
+  } else {
+    return res.status(404).send({
+      message: "Product not found!",
+    });
+  }
+});
+
+// ** DELETE
+
 const PORT: number = 5000;
 app.listen(PORT, () => {
   console.log(`Server running at => http://localhost:${PORT}`);

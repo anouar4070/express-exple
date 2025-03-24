@@ -4,6 +4,8 @@ import { Product } from "./interfaces";
 
 const app = express();
 
+app.use(express.json());
+
 app.get("/", (req, res) => {
   res.send(`<h1>Hello Express.js</h1>`);
 });
@@ -21,9 +23,9 @@ app.get("/products", (req, res) => {
 
     let filteredProducts = [];
 
-    filteredProducts = fakeProductsData.map(product => {
+    filteredProducts = fakeProductsData.map((product) => {
       const filteredProduct: any = {};
-      propertiesToFilter.forEach(property => {
+      propertiesToFilter.forEach((property) => {
         if (product.hasOwnProperty(property as keyof Product)) {
           filteredProduct[property] = product[property as keyof Product];
         }
@@ -43,12 +45,35 @@ app.get("/products/:id", (req: Request, res: Response) => {
     res.status(404).send({ message: "Invalid product ID" });
   }
 
-  const findProduct: Product | undefined = fakeProductsData.find(product => product.id === productId);
+  const findProduct: Product | undefined = fakeProductsData.find(
+    (product) => product.id === productId
+  );
   if (findProduct) {
-    res.send({ id: productId, title: findProduct.title, price: findProduct.price });
+    res.send({
+      id: productId,
+      title: findProduct.title,
+      price: findProduct.price,
+    });
   } else {
     res.status(404).send({ message: "Product not found" });
   }
+});
+
+// ** CREATE A NEW PRODUCT
+
+app.post("/products", (req, res) => {
+  //console.log(req.body);
+  const newProduct = req.body;
+
+fakeProductsData.push({id: fakeProductsData.length + 1, ...newProduct})
+
+  res.status(201).send({ 
+    id: fakeProductsData.length + 1,
+    title: newProduct.title,
+    price: newProduct.price,
+    description: newProduct.description,
+   });
+  
 });
 
 const PORT: number = 5000;

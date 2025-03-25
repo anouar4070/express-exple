@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import { generateFakeProducts } from "./utils/fakeData";
 import { Product } from "./interfaces";
 import ProductController from "./controllers/productController";
-import { ProductsService } from "./services/ProductsServices";
+import ProductService from "./services/ProductService";
 
 const app = express();
 
@@ -10,46 +10,20 @@ app.use(express.json());
 
 const fakeProductsData = generateFakeProducts();
 
-const productService = new ProductsService();
+const productService = new ProductService(fakeProductsData);
 
 const productController = new ProductController(productService);
-console.log()
+console.log();
 
 app.get("/", (req, res) => {
   res.send(`<h1>Hello Express.js</h1>`);
 });
 
-
-
-app.get("/products", (req, res) => {
+app.get("/products", (req, res) => res.send(productController.getProducts()));
+ 
   //const queryParams = req.query;
   //console.log(queryParams); // { filter: 'title' } //?filter=title
 
-  return res.send(productController.getProducts());
-
-  // ** Filter By, keyof Product
-  // const filterQuery = req.query.filter as string;
-
-  // if (filterQuery) {
-  //   const propertiesToFilter = filterQuery.split(",");
-
-  //   let filteredProducts = [];
-
-  //   filteredProducts = fakeProductsData.map((product) => {
-  //     const filteredProduct: any = {};
-  //     propertiesToFilter.forEach((property) => {
-  //       if (product.hasOwnProperty(property as keyof Product)) {
-  //         filteredProduct[property] = product[property as keyof Product];
-  //       }
-  //     });
-  //     return { id: product.id, ...filteredProduct };
-  //   });
-
-  //   return res.send(filteredProducts);
-  // }
-
-  // return res.send(fakeProductsData);
-});
 app.get("/products/:id", (req: Request, res: Response) => {
   console.log(req.params); // { id: '242'}
   const productId = +req.params.id; //const productId = parseInt(req.params.id);
@@ -77,15 +51,14 @@ app.post("/products", (req, res) => {
   //console.log(req.body);
   const newProduct = req.body;
 
-fakeProductsData.push({id: fakeProductsData.length + 1, ...newProduct})
+  fakeProductsData.push({ id: fakeProductsData.length + 1, ...newProduct });
 
-  res.status(201).send({ 
+  res.status(201).send({
     id: fakeProductsData.length + 1,
     title: newProduct.title,
     price: newProduct.price,
     description: newProduct.description,
-   });
-  
+  });
 });
 
 // ** UPDATE
@@ -98,11 +71,16 @@ app.patch("/products/:id", (req, res) => {
     });
   }
 
-  const productIndex: number | undefined = fakeProductsData.findIndex(product => product.id === productId);
+  const productIndex: number | undefined = fakeProductsData.findIndex(
+    (product) => product.id === productId
+  );
   const productBody = req.body;
 
   if (productIndex !== -1) {
-    fakeProductsData[productIndex] = { ...fakeProductsData[productIndex], ...productBody };
+    fakeProductsData[productIndex] = {
+      ...fakeProductsData[productIndex],
+      ...productBody,
+    };
     return res.status(200).send({
       message: "Product has been updated!",
     });
@@ -123,10 +101,14 @@ app.delete("/products/:id", (req, res) => {
     });
   }
 
-  const productIndex: number | undefined = fakeProductsData.findIndex(product => product.id === productId);
+  const productIndex: number | undefined = fakeProductsData.findIndex(
+    (product) => product.id === productId
+  );
 
   if (productIndex !== -1) {
-    const filteredProduct = fakeProductsData.filter(product => product.id !== productId);
+    const filteredProduct = fakeProductsData.filter(
+      (product) => product.id !== productId
+    );
     res.status(200).send(filteredProduct);
   } else {
     return res.status(404).send({
@@ -134,7 +116,6 @@ app.delete("/products/:id", (req, res) => {
     });
   }
 });
-
 
 const PORT: number = 5000;
 app.listen(PORT, () => {

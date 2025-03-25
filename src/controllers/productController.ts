@@ -1,9 +1,11 @@
-import { ProductsService } from "../services/ProductsServices";
+import { Product } from "../interfaces";
+import ProductService from "../services/ProductService";
+
 
 class ProductController {
-  constructor(private productService: ProductsService) {}
+  constructor(private productService: ProductService) {}
 
-  getProducts() {
+  getProducts(): Product[] {
     return this.productService.findAll();
   }
 }

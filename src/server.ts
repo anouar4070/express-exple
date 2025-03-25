@@ -19,7 +19,7 @@ app.get("/", (req, res) => {
   res.send(`<h1>Hello Express.js</h1>`);
 });
 
-app.get("/products", (req, res) => res.send(productController.getProducts()));
+app.get("/products", (req, res) => res.send(productController.getProducts(req)));
  
   //const queryParams = req.query;
   //console.log(queryParams); // { filter: 'title' } //?filter=title

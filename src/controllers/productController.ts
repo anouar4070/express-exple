@@ -1,18 +1,11 @@
-import { Product } from "../interfaces";
- 
- class ProductController {
-   //  Properties
-   products: Product[];
- 
-   constructor(products: Product[]) {
-     this.products = products;
-   }
- 
-   //  Methods
-   getProducts() {
-     //  Delegate => Logic => Service
-     return this.products;
-   }
- }
- 
- export default ProductController;
+import { ProductsService } from "../services/ProductsServices";
+
+class ProductController {
+  constructor(private productService: ProductsService) {}
+
+  getProducts() {
+    return this.productService.findAll();
+  }
+}
+
+export default ProductController;

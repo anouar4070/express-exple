@@ -1,20 +1,29 @@
 import express, { Request, Response } from "express";
 import { generateFakeProducts } from "./utils/fakeData";
 import { Product } from "./interfaces";
+import ProductController from "./controllers/productController";
 
 const app = express();
 
 app.use(express.json());
 
+const fakeProductsData = generateFakeProducts();
+
+const productController = new ProductController(fakeProductsData);
+console.log()
+
 app.get("/", (req, res) => {
   res.send(`<h1>Hello Express.js</h1>`);
 });
 
-const fakeProductsData = generateFakeProducts();
+
 
 app.get("/products", (req, res) => {
   //const queryParams = req.query;
   //console.log(queryParams); // { filter: 'title' } //?filter=title
+
+  return res.send(productController.getProducts());
+
   // ** Filter By, keyof Product
   const filterQuery = req.query.filter as string;
 

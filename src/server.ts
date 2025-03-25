@@ -19,31 +19,14 @@ app.get("/", (req, res) => {
   res.send(`<h1>Hello Express.js</h1>`);
 });
 
-app.get("/products", (req, res) => res.send(productController.getProducts(req)));
+app.get("/products", (req, res) => productController.getProducts(req, res));
  
   //const queryParams = req.query;
   //console.log(queryParams); // { filter: 'title' } //?filter=title
 
-app.get("/products/:id", (req: Request, res: Response) => {
-  console.log(req.params); // { id: '242'}
-  const productId = +req.params.id; //const productId = parseInt(req.params.id);
-  if (isNaN(productId)) {
-    res.status(404).send({ message: "Invalid product ID" });
-  }
+app.get("/products/:id", (req, res) => productController.getProductById(req, res));
+  //console.log(req.params); // { id: '242'}
 
-  const findProduct: Product | undefined = fakeProductsData.find(
-    (product) => product.id === productId
-  );
-  if (findProduct) {
-    res.send({
-      id: productId,
-      title: findProduct.title,
-      price: findProduct.price,
-    });
-  } else {
-    res.status(404).send({ message: "Product not found" });
-  }
-});
 
 // ** CREATE A NEW PRODUCT
 

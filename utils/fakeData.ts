@@ -8,6 +8,7 @@ import { Product } from "../interfaces";
        title: faker.commerce.productName(),
        price: +faker.commerce.price({ min: 100, max: 200 }),
        description: faker.commerce.productDescription(),
+       imageURL: faker.image.urlPicsumPhotos(),
      };
    });
  };

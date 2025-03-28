@@ -1,6 +1,6 @@
+import ProductService from "../services/ProductService";
 import { Request, Response } from "express";
 import { Product } from "../interfaces";
-import ProductService from "../services/ProductService";
 
 class ProductController {
   constructor(private productService: ProductService) {}
@@ -9,36 +9,28 @@ class ProductController {
     const filterQuery = req.query.filter as string;
 
     if (filterQuery) {
-      return res.send(this.productService.filterByQuery(filterQuery));
+      res.send(this.productService.filterByQuery(filterQuery));
     }
-
-    return res.send(this.productService.findAll());
+    res.send(this.productService.findAll());
   }
 
   getProductById(req: Request, res: Response) {
-    const productId = +req.params.id; //const productId = parseInt(req.params.id);
+    const productId = +req.params.id;
 
     if (isNaN(productId)) {
       res.status(404).send({ message: "Invalid product ID" });
     }
 
-    const product: Product | undefined =
-      this.productService.getProductById(productId);
+    const product: Product | undefined = this.productService.getProductById(productId);
 
     if (product) {
-      res.send({
-        id: productId,
-        title: product.title,
-        price: product.price,
-      });
+      res.send({ id: productId, title: product.title, price: product.price });
     } else {
       res.status(404).send({ message: "Product not found" });
     }
   }
-
   createProduct(req: Request, res: Response) {
     const productBody = req.body;
-
     this.productService.createProduct(productBody);
 
     res.status(201).send({
@@ -48,8 +40,7 @@ class ProductController {
       description: productBody.description,
     });
   }
-
-  updateProduct(req: Request, res: Response){
+  updateProduct(req: Request, res: Response) {
     const productId = +req.params.id;
 
     if (isNaN(productId)) {
@@ -57,14 +48,14 @@ class ProductController {
         message: "Product not found!",
       });
     }
-  
-    const productIndex: number | undefined = this.productService.findAll().findIndex(
-      (product) => product.id === productId
-    );
+
+    const productIndex: number | undefined = this.productService
+      .findAll()
+      .findIndex(product => product.id === productId);
     const productBody = req.body;
-  
+
     if (productIndex !== -1) {
-     this.productService.updateProductByIndex(productIndex, productBody)
+      this.productService.updateProductByIndex(productIndex, productBody);
 
       return res.status(200).send({
         message: "Product has been updated!",
@@ -76,7 +67,7 @@ class ProductController {
     }
   }
 
-  deleteProduct(req: Request, res: Response){
+  deleteProduct(req: Request, res: Response) {
     const productId = +req.params.id;
 
     if (isNaN(productId)) {
@@ -84,11 +75,11 @@ class ProductController {
         message: "Product not found!",
       });
     }
-  
-    const productIndex: number | undefined = this.productService.findAll().findIndex(
-      (product) => product.id === productId
-    );
-  
+
+    const productIndex: number | undefined = this.productService
+      .findAll()
+      .findIndex(product => product.id === productId);
+
     if (productIndex !== -1) {
       const filteredProduct = this.productService.deleteProduct(productId);
       res.status(200).send(filteredProduct);
@@ -99,12 +90,12 @@ class ProductController {
     }
   }
 
-  renderProductList(req: Request, res: Response){
+  renderProductsList(req: Request, res: Response) {
     res.render("products", {
-      pageTitle: "Product List",
-      description: "Awesome store...",
+      pageTitle: "Product list 👕",
+      description: "This is awesome store",
       products: this.productService.findAll(),
-    })
+    });
   }
 
   renderProductPage(req: Request, res: Response) {

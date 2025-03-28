@@ -1,9 +1,14 @@
-doctype html
-html(lang="en")
-   head
-     meta(charset="UTF-8")
-     meta(name="viewport", content="width=device-width, initial-scale=1.0")
-     link(rel="stylesheet", href="/styles/global.css")
-     title= `Product - ${product.title}`
-   body 
-     h5.text-xl= product.title
+extends layout/_base
+block content
+  .group.flex.w-full.max-w-xs.flex-col.overflow-hidden.rounded-lg.border.border-gray-100.bg-white.shadow-md.mx-auto
+    a.relative.mx-3.mt-3.flex.h-60.overflow-hidden.rounded-xl(href=`/products/${product.id}`)
+      img.peer.absolute.top-0.right-0.h-full.w-full.object-cover(src=`${product.imageURL}` alt='product image')
+    .mt-4.px-5.pb-5
+      a(href=href=`/products/${product.id}`)
+        h5.text-xl.tracking-tight.text-slate-900= product.title
+      .mt-2.mb-5.flex.items-center.justify-between
+        p
+          span.text-3xl.font-bold.text-slate-900= `$${product.price}`
+          span.text-sm.text-slate-900.line-through= product.price + 32
+      button.block.w-full.flex.items-center.justify-center.rounded-md.bg-slate-900.px-5.text-center.text-sm.font-medium.text-white(class='py-2.5 hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300')
+        |       Add to cart

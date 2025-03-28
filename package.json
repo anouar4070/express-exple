@@ -2,7 +2,8 @@
   "type": "commonjs",
   "scripts": {
     "dev": "nodemon server.ts",
-    "build": "tsc -p ."
+    "build": "tsc -p .",
+    "build:css": "postcss public/styles/tailwind.css -o public/styles/global.css"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
@@ -11,6 +12,7 @@
     "autoprefixer": "^10.4.21",
     "nodemon": "^3.1.0",
     "postcss": "^8.5.3",
+    "postcss-cli": "^11.0.1",
     "tailwindcss": "^3.4.17",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"

@@ -30,9 +30,8 @@ console.log();
 //   res.send(`<h1>Hello Express.js</h1>`);
 // });
 
-app.get('/products', (req, res) =>{
-  res.render('products')
-})
+app.get('/products', (req, res) =>productController.renderProductList(req, res));
+
 
 app.get("/api/products", (req, res) => productController.getProducts(req, res));
  

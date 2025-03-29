@@ -3,7 +3,13 @@ import { Request, Response } from "express";
 import { Product } from "../interfaces";
 
 class ProductController {
-  constructor(private productService: ProductService) {}
+  constructor(private productService: ProductService) {
+    this.getProducts = this.getProducts.bind(this);
+    this.getProductById = this.getProductById.bind(this);
+    this.createProduct = this.createProduct.bind(this);
+    this.updateProduct = this.updateProduct.bind(this);
+    this.deleteProduct = this.deleteProduct.bind(this);
+  }
 
   getProducts(req: Request, res: Response) {
     const filterQuery = req.query.filter as string;
@@ -88,22 +94,6 @@ class ProductController {
         message: "Product not found!",
       });
     }
-  }
-
-  renderProductsList(req: Request, res: Response) {
-    res.render("products", {
-      pageTitle: "Product list 👕",
-      description: "This is awesome store",
-      products: this.productService.findAll(),
-    });
-  }
-
-  renderProductPage(req: Request, res: Response) {
-    const productId = +req.params.id;
-
-    res.render("product", {
-      product: this.productService.getProductById(productId),
-    });
   }
 }
 

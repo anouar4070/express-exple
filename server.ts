@@ -8,10 +8,19 @@ import { generateFakeProducts } from "./utils/fakeData";
 import ErrorMiddleware from "./middlewares/Error";
 import NotFoundMiddleware from "./middlewares/NotFound";
 import helmet from "helmet";
+import morgan from "morgan";
+import rateLimit from "express-rate-limit";
+import compression  from "compression";
 
 const app = express();
 
 dotenv.config();
+
+const rateLimiterOptions = {
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+  message: "Too many requests from this IP, please try again later.",
+};
 
 app.use(express.json());
 
@@ -24,6 +33,13 @@ app.use(
     },
   })
 );
+
+app.use(compression())
+
+app.use(morgan("dev"));
+app.use(rateLimit(rateLimiterOptions));
+
+
 
 // * Set views directory and engine
 app.set("views", path.join(__dirname, "views"));

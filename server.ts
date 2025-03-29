@@ -6,6 +6,7 @@ import productsRouter from "./routes/products";
 import ProductService from "./services/ProductService";
 import { generateFakeProducts } from "./utils/fakeData";
 import ErrorMiddleware from "./middlewares/Error";
+import NotFoundMiddleware from "./middlewares/NotFound";
 
 const app = express();
 
@@ -44,6 +45,7 @@ app.get("*", (req, res) => {
   });
 });
 
+app.use(NotFoundMiddleware.handle);
 app.use(ErrorMiddleware.handle);
 
 const PORT: number = 5000;

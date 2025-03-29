@@ -1,18 +1,29 @@
 import express from "express";
 import path from "path";
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 import ProductsViewController from "./controllers/productViewController";
 import productsRouter from "./routes/products";
 import ProductService from "./services/ProductService";
 import { generateFakeProducts } from "./utils/fakeData";
 import ErrorMiddleware from "./middlewares/Error";
 import NotFoundMiddleware from "./middlewares/NotFound";
+import helmet from "helmet";
 
 const app = express();
 
+dotenv.config();
+
 app.use(express.json());
 
-dotenv.config();
+app.use(
+  helmet({
+    // ! DANGER: DON'T WRITE THIS LINE IN PRODUCTION
+    contentSecurityPolicy: false,
+    xFrameOptions: {
+      action: "deny",
+    },
+  })
+);
 
 // * Set views directory and engine
 app.set("views", path.join(__dirname, "views"));

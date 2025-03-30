@@ -11,6 +11,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import rateLimit from "express-rate-limit";
 import compression  from "compression";
+import pool from "./models/db";
 
 const app = express();
 
@@ -59,6 +60,21 @@ app.get("/products/:id", productsViewController.renderProductPage);
 
 // ** Products API Routes
 app.use("/api/products", productsRouter);
+
+
+app.get("/db/products", async (req, res) => {
+  // ** I/O Operations
+  try {
+    const products = await pool.query("SELECT id, name, price, qty FROM products;");
+    res.json({
+      products: products.rows,
+      length: products.rowCount,
+    });
+  } catch (error) {
+    console.error(error);
+  }
+});
+
 
 app.get("/", (req, res) => {
   res.render("index", {
